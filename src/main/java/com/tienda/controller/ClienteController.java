@@ -16,13 +16,13 @@ public class ClienteController {
     @GetMapping("/cliente/listado")
     public String inicio(Model model){
         var clientes = clienteService.getClientes();
-        model.addAttribute("cliente",clientes);
+        model.addAttribute("clientes",clientes);
         return "/cliente/listado";
     }
     
-    @GetMapping("cliente/nuevo")
+    @GetMapping("/cliente/nuevo")
     public String nuevoCliente(Cliente cliente) {
-        return "cliente/modificar";
+        return "/cliente/modificar";
     }
 
     @PostMapping("/cliente/guardar")
@@ -34,7 +34,7 @@ public class ClienteController {
     @GetMapping("/cliente/modificar/{idCliente}")
     public String modificarCliente(Cliente cliente, Model model) {
         cliente = clienteService.getCliente(cliente);
-        model.addAttribute("cliente", cliente);
+        model.addAttribute("clientes", cliente);
         return "/cliente/modificar";
     }
 

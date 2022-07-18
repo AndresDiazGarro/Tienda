@@ -9,9 +9,9 @@ body{
 }
 
 .header{
+    position: fixed;
     background-color: #076AF0;
     height: 12%;
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%
@@ -61,6 +61,7 @@ body{
 }
 
 .footer {
+    position: fixed;
     background-color: black;
     color: white;
     text-align: center;
