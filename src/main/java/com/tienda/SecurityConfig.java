@@ -1,5 +1,7 @@
 package com.tienda;
 
+import com.tienda.service.UsuarioDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,26 +10,32 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
-    //El siguiente método funciona para hacer la autenticación del usuario
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
+    @Autowired
+    UsuarioDetailsServiceImpl userDetailsService;
+    
+//El siguiente método funciona para hacer la autenticación del usuario
     
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.inMemoryAuthentication() //Sale en examen los usuarios en bases de datos
-                .withUser("admin")
-                .password("{noop}123") //No va a encriptar la contraseña {noop} noop debe ser entre {}
-                .roles("ADMIN","VENDEDOR","USER")
-                .and()
-                .withUser("vendedor")
-                .password("{noop}123") //No va a encriptar la contraseña {noop} noop debe ser entre {}
-                .roles("VENDEDOR","USER")
-                .and()
-                .withUser("user")
-                .password("{noop}123") //No va a encriptar la contraseña {noop} noop debe ser entre {}
-                .roles("USER"); //Al puro final de definir usuarios, se pone el ;
-                
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        
+//        auth.inMemoryAuthentication()
+//                .withUser("admin")
+//                    .password("{noop}123")
+//                    .roles("ADMIN", "VENDEDOR", "USER")      //Esto lo pide en el examen
+//                .and()
+//                .withUser("vendedor")
+//                    .password("{noop}123")
+//                    .roles("VENDEDOR", "USER")
+//                .and()
+//                .withUser("user")
+//                    .password("{noop}123")
+//                    .roles("USER");
+        auth.userDetailsService(userDetailsService);
     }
-    //Definir la configuración de los accesos de cada Perfil de usuario
+    
+//Definir la configuración de accesos
     @Override
     protected void configure(HttpSecurity http)throws Exception {
         http.authorizeRequests()
@@ -39,10 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                              "/cliente/modificar/**",    "cliente/eliminar/**",
                              "/usuario/nuevo",           "/usuario/guardar",
                              "/usuario/modificar/**",    "usuario/eliminar/**")
-                       .hasRole("ADMIN") //Sólo para un usuario
+                       .hasRole("ADMIN")
                 .antMatchers("/articulo/listado",        "/cliente/listado",
                              "/categoria/listado")
-                       .hasAnyRole("ADMIN", "VENDEDOR") //Para varios usuarios
+                       .hasAnyRole("ADMIN", "VENDEDOR")
                 .antMatchers("/")
                        .hasAnyRole("ADMIN", "VENDEDOR", "USER")
                 .and()
